@@ -1,8 +1,6 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
 
-
-
 .header {
   display: flex;
   flex-direction: row;
@@ -88,4 +86,3 @@
   color: $text-color;
   width: 670px;
 }
-

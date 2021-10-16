@@ -60,44 +60,43 @@
   padding: 8px 0;
 }
 
-
 @mixin input-plate {
-    width: 100%;
-    height: 40px;
-    outline: none;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    color: $text-color;
-    padding: 12px 8px;
+  width: 100%;
+  height: 40px;
+  outline: none;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 24px;
+  color: $text-color;
+  padding: 12px 8px;
 
-    &::placeholder {
-      color: $disabled-color;
-    }
+  &::placeholder {
+    color: $disabled-color;
+  }
 
-    &:focus {
-      border-color: $blue;
-    }
+  &:focus {
+    border-color: $blue;
+  }
 
-    &:invalid {
-      border-color: $red;
-    }
+  &:invalid {
+    border-color: $red;
+  }
 }
 
 @mixin input-warning-p {
-    width: 100%;
-    color: $red;
-    margin: 0;
-    @include fsize-small;
+  width: 100%;
+  color: $red;
+  margin: 0;
+  @include fsize-small;
 }
 
 @mixin form-header {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    text-align: center;
-    color: $heading-color;
-    margin-bottom: 20px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
+  color: $heading-color;
+  margin-bottom: 20px;
 }

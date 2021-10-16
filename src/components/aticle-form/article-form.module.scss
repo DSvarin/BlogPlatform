@@ -2,76 +2,73 @@
 @import '../../styles/mixins.scss';
 
 .container {
-    @include container;
-    width: 940px;
-    margin-top: 34px;
-    padding: 48px 32px;
-    font-family: 'Roboto';
+  @include container;
+  width: 940px;
+  margin-top: 34px;
+  padding: 48px 32px;
+  font-family: 'Roboto';
 
-    .header {
-        @include form-header;
+  .header {
+    @include form-header;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 20px;
+    @include fsize-base;
+  }
+
+  input,
+  textarea {
+    @include input-plate;
+
+    &[type='submit'] {
+      @include submit-btn;
+      display: block;
+      width: 320px;
     }
+  }
 
-    label {
-        display: block;
-        margin-bottom: 20px;
-        @include fsize-base
+  textarea {
+    height: 168px;
+  }
+
+  .red {
+    border-color: $red;
+
+    &:focus {
+      border: 2px solid $red;
     }
+  }
 
-    input, textarea {
-        @include input-plate;
+  p {
+    @include input-warning-p;
+  }
 
-        &[type='submit'] {
-            @include submit-btn;
-            display: block;
-            width: 320px;
-        }
+  .tag {
+    width: 300px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
 
-    }
+  &:hover {
+    cursor: default;
+  }
 
-    textarea {
-        height: 168px;
-    }
-
-    .red {
-        border-color: $red;
-
-        &:focus {
-            border: 2px solid $red;
-        }
-    }
-
-    p {
-        @include input-warning-p;
-    }
-
-    .tag {
-        width: 300px;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-
-    &:hover {
-        cursor: default;
-    }
-
-    button {
-        height: 40px;
-        padding: 0 20px;
-        display: inline-block;
-        vertical-align: top;
-    }
+  button {
+    height: 40px;
+    padding: 0 20px;
+    display: inline-block;
+    vertical-align: top;
+  }
 }
 
+.delete {
+  @include bordered-button($red);
+  margin-left: 20px;
+}
 
-    .delete {
-        @include bordered-button($red);
-        margin-left: 20px;
-    }
-
-    .add {
-        @include bordered-button($blue);
-        margin-left: 20px;
-    }
-
-
+.add {
+  @include bordered-button($blue);
+  margin-left: 20px;
+}
