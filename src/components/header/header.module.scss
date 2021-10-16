@@ -1,0 +1,65 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
+
+.header {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  background: #ffffff;
+  color: $heading-color;
+
+  h6 {
+    margin-bottom: 0;
+  }
+}
+
+.singIn {
+  color: $heading-color;
+}
+
+.singUp {
+  @include bordered-button($green);
+  height: 50px;
+  width: 110px;
+  margin-left: 50px;
+  h6 {
+    color: $green
+  }
+}
+
+.signedBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .createArticle {
+    @include bordered-button($green);
+    @include fsize-base;
+    height: 30px;
+    width: 110px;
+    margin-right: 27px;
+  }
+
+  .profile {
+    color: inherit;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    img {
+      @include icon;
+      margin-left: 13px;
+    }
+  }
+
+  .logOut {
+    @include bordered-button($text-color);
+    height: 50px;
+    width: 110px;
+    margin-left: 27px;
+  }
+}

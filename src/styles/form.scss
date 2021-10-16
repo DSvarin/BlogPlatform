@@ -1,0 +1,84 @@
+@import './variables.scss';
+@import './mixins.scss';
+
+.container {
+  @include container;
+  width: 384px;
+  padding: 48px 36.5px;
+  font-family: 'Roboto';
+  margin-top: 60px;
+
+  label {
+    display: block;
+    margin-bottom: 15px;
+    @include fsize-base
+  }
+
+  input {
+    @include input-plate;
+
+    &[type='checkbox'] {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    &[type='submit'] {
+      @include submit-btn;
+      margin-bottom: 8px;
+    }
+  }
+
+  .red {
+    border-color: $red;
+
+    &:focus {
+      border: 2px solid $red;
+    }
+  }
+
+  p {
+    @include input-warning-p;
+  }
+
+  &:hover {
+    cursor: default;
+  }
+}
+
+.header {
+  @include form-header;
+}
+
+.error {
+  color: $red;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.agreement {
+  border-top: 1px solid #e8e8e8;
+  padding-top: 8px;
+  padding-left: 27px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+
+  input {
+    position: absolute;
+    left: 0;
+  }
+
+  p {
+    position: relative;
+    left: -27px;
+  }
+}
+
+.linkSingIn {
+  @include fsize-small;
+  color: $text-color-secondary;
+  text-align: center;
+}

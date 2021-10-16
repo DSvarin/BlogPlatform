@@ -1,0 +1,91 @@
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 7px;
+}
+
+.searchInfo {
+  display: grid;
+  grid-template-areas:
+    'title like counter'
+    'tegs tegs tegs';
+  align-items: center;
+
+  .title {
+    grid-area: title;
+    margin-right: 13px;
+    margin-bottom: 5px;
+    color: $blue;
+  }
+
+  .like {
+    grid-area: like;
+    height: 15px;
+    margin-right: 5px;
+  }
+
+  .tagsList {
+    grid-area: tegs;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.tag {
+  color: $text-color-secondary;
+  border: 1px solid $text-color-secondary;
+  border-radius: 2px;
+  margin-right: 8px;
+  @include fsize-small;
+  padding: 0 5px;
+}
+
+.noTags {
+  color: $disabled-color;
+  border: 1px solid $disabled-color;
+  border-radius: 2px;
+  margin-right: 8px;
+  @include fsize-small;
+  padding: 0 5px;
+}
+
+.creationInfo {
+  display: grid;
+  grid-template-areas:
+    'name img'
+    'date img';
+  justify-items: end;
+
+  .name {
+    grid-area: name;
+    margin-bottom: 0;
+    align-self: end;
+  }
+
+  .date {
+    grid-area: date;
+    color: $text-color-secondary;
+    @include fsize-small;
+    align-self: start;
+  }
+
+  .img {
+    grid-area: img;
+    margin-left: 12px;
+    @include icon;
+    align-self: center;
+  }
+}
+
+.description {
+  @include fsize-small;
+  color: $text-color;
+  width: 670px;
+}
+
