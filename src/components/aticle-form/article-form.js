@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { useParams, useRouteMatch } from 'react-router';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 import classes from './article-form.module.scss';
 
 const ArticleForm = ({ articles }) => {
@@ -44,69 +45,32 @@ export default connect(mapStateToProps, null)(ArticleForm);
 const Form = ({ title, description, body, tagList }) => {
   const {
     register,
-    unregister,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'tagList',
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (tagList.length === 0) {
+      append({ tag: '' });
+    } else {
+      tagList.forEach((tag) => append({ tag }));
+    }
+  }, []);
 
   const [titleValue, setTitle] = useState(title);
   const [descripValue, setDescrip] = useState(description);
   const [bodyValue, setBody] = useState(body);
-  const [tags, setTags] = useState(tagList.map((item) => ({ [nanoid(3)]: item })));
 
-  const Tags = () => {
-    // const tagsArrOfObj = tagList.map((item) =>( {[nanoid(3)]: item}))
-
-    // const [tags, setTags] = useState(tagsArrOfObj)
-    console.log(tags);
-
-    const tagItem = tags.map((tag, index) => {
-      const key = Object.keys(tag)[0];
-      console.log(tag, index, key);
-      return (
-        <div>
-          <input
-            value={tag[index]}
-            className={classes.tag}
-            placeholder="Tag"
-            type="text"
-            {...register(`tag ${key}`)}
-            onChange={(event) =>
-              setTags([...tags.slice(0, index), { [key]: event.target.value }, ...tags.slice(index + 1)])
-            }
-          />
-          <button
-            className={classes.delete}
-            type="button"
-            value={key}
-            onClick={() => {
-              console.log(key);
-              unregister(`tag ${key}`);
-              setTags([...tags.slice(0, index), ...tags.slice(index + 1)]);
-            }}
-          >
-            {' '}
-            Delete{' '}
-          </button>
-          <button className={classes.add} type="button" onClick={() => setTags([...tags, { [nanoid(3)]: '' }])}>
-            {' '}
-            Add tag{' '}
-          </button>
-        </div>
-      );
-    });
-
-    // unregister(`tag ${event.target.value}`)
-
-    return (
-      <label>
-        Tags
-        {tagItem}
-      </label>
-    );
-  };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <label>
@@ -129,28 +93,53 @@ const Form = ({ title, description, body, tagList }) => {
           value={descripValue}
           placeholder="Short description"
           type="text"
-          className={errors.shortDescription && classes.red}
-          {...register('shortDescription', {
+          className={errors.description && classes.red}
+          {...register('description', {
             required: 'Short description is required',
           })}
           onChange={(event) => setDescrip(event.target.value)}
         />
-        {errors.shortDescription && <p>{errors.shortDescription.message}</p>}
+        {errors.description && <p>{errors.description.message}</p>}
       </label>
       <label>
         Text
         <textarea
           value={bodyValue}
           placeholder="Text"
-          className={errors.text && classes.red}
-          {...register('text', {
+          className={errors.body && classes.red}
+          {...register('body', {
             required: 'Text is required',
           })}
           onChange={(event) => setBody(event.target.value)}
         />
-        {errors.text && <p>{errors.text.message}</p>}
+        {errors.body && <p>{errors.body.message}</p>}
       </label>
-      <Tags />
+      <label>
+        Tags
+        {fields.map((item, index) => (
+          <div className={classes.tags} key={item.id}>
+            <input
+              {...register(`tagList[${index}].tag`)}
+              defaultValue={item.tag}
+              className={classes.tag}
+              placeholder="Tag"
+              type="text"
+            />
+            {fields.length !== 1 ? (
+              <button className={classes.delete} type="button" onClick={() => remove(index)}>
+                Delete
+              </button>
+            ) : null}
+          </div>
+        ))}
+        <button
+          className={fields.length !== 1 ? classes.add : classes.onlyAdd}
+          type="button"
+          onClick={() => append({})}
+        >
+          Add tag
+        </button>
+      </label>
       <input type="submit" value="Send" />
     </form>
   );
@@ -160,7 +149,7 @@ Form.defaultProps = {
   title: '',
   description: '',
   body: '',
-  tagList: [''],
+  tagList: [],
 };
 
 Form.propTypes = {

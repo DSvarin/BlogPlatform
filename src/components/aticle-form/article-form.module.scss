@@ -7,6 +7,7 @@
   margin-top: 34px;
   padding: 48px 32px;
   font-family: 'Roboto';
+  position: relative;
 
   .header {
     @include form-header;
@@ -26,6 +27,8 @@
       @include submit-btn;
       display: block;
       width: 320px;
+      position: absolute;
+      bottom: 40px;
     }
   }
 
@@ -70,5 +73,17 @@
 
 .add {
   @include bordered-button($blue);
-  margin-left: 20px;
+  position: relative;
+  top: -50px;
+  left: 425px
 }
+
+.onlyAdd {
+  @include bordered-button($blue);
+  position: relative;
+  top: -50px;
+  left: 320px
+}
+
+
+
