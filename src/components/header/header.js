@@ -38,6 +38,7 @@ const Header = ({ signedIn, user, setUserData, setSignedIn }) => {
               myStorage.clear();
               setUserData({});
               setSignedIn(false);
+              history.push('/');
             }}
           >
             <h6>Log Out</h6>

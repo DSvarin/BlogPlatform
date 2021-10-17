@@ -75,15 +75,12 @@
   @include bordered-button($blue);
   position: relative;
   top: -50px;
-  left: 425px
+  left: 425px;
 }
 
 .onlyAdd {
   @include bordered-button($blue);
   position: relative;
   top: -50px;
-  left: 320px
+  left: 320px;
 }
-
-
-
