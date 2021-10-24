@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Redirect, useLocation } from 'react-router-dom';
-// import { Spin } from 'antd';
 import BlogapiService from '../services/blogapi-service';
 
 import { setArticleList, setAuthentication, setUser } from '../../store/actions';
@@ -23,7 +22,6 @@ const App = ({ setSignedIn, setUserData, setArticles, user, authentication, page
   const blogapiService = new BlogapiService();
 
   useEffect(() => {
-    console.log('app');
     if (myStorage.getItem('user')) {
       setSignedIn(true);
       setUserData(JSON.parse(myStorage.getItem('user')));
@@ -34,18 +32,16 @@ const App = ({ setSignedIn, setUserData, setArticles, user, authentication, page
   }, []);
 
   return (
-    <>
-      <Router>
-        <Header />
-        <Route exact path={['/', '/articles']} component={ArticleList} />
-        <Route exact path="/articles/:slug" component={ArticleFull} />
-        <Route path="/sign-in">{authentication ? <Redirect to="/" /> : <SignInForm />}</Route>
-        <Route path="/sign-up">{user.email ? <Redirect to="/sign-in" /> : <SignUpForm />}</Route>
-        <Route path="/profile" component={EditProfileForm} />
-        <Route path="/articles/:slug/edit" component={ArticleForm} />
-        <Route path="/new-article" component={ArticleForm} />
-      </Router>
-    </>
+    <Router>
+      <Header />
+      <Route exact path={['/', '/articles']} component={ArticleList} />
+      <Route exact path="/articles/:slug" component={ArticleFull} />
+      <Route path="/sign-in">{authentication ? <Redirect to="/" /> : <SignInForm />}</Route>
+      <Route path="/sign-up">{user.email ? <Redirect to="/sign-in" /> : <SignUpForm />}</Route>
+      <Route path="/profile" component={EditProfileForm} />
+      <Route path="/articles/:slug/edit" component={ArticleForm} />
+      <Route path="/new-article" component={ArticleForm} />
+    </Router>
   );
 };
 

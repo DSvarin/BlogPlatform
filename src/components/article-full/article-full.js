@@ -13,7 +13,6 @@ import ArticlePreview from '../article-preview';
 import 'antd/dist/antd.css';
 import classes from './article-full.module.scss';
 
-// eslint-disable-next-line no-unused-vars
 const ArticleFull = ({ user, signedIn }) => {
   const { slug } = useParams();
   const { pathname } = useLocation();
