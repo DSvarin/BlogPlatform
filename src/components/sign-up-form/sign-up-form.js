@@ -10,7 +10,8 @@ import { setUser } from '../../store/actions';
 import classes from './sign-up-form.module.scss';
 
 const SignUpForm = ({ setUserData }) => {
-  const [error, setError] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const {
     register,
@@ -26,29 +27,29 @@ const SignUpForm = ({ setUserData }) => {
     const request = { username, email, password };
     blogapiService.signUp(request).then((response) => {
       if (response.errors) {
-        setError(response.errors.body[1]);
-      }
-      if (response.user) {
+        const [emailErr] = 'email' in response.errors ? response.errors.email : '';
+        setEmailError(emailErr);
+        const [nameErr] = 'username' in response.errors ? response.errors.username : '';
+        setNameError(nameErr);
+      } else {
         setUserData(response.user);
       }
     });
   };
-
-  const errorText = error ? <div className={classes.error}>{error}</div> : null;
 
   const password = watch('password');
 
   return (
     <div className={classes.container}>
       <div className={classes.header}>Create new account</div>
-      {errorText}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          Username
+        <label className={nameError ? classes.error : undefined}>
+          Username {nameError ? `${nameError}` : ''}
           <input
             placeholder="Username"
             type="text"
-            className={errors.username || error ? classes.red : undefined}
+            className={errors.username || nameError ? classes.red : undefined}
+            autoComplete="username"
             {...register('username', {
               required: 'Username is required',
               minLength: {
@@ -60,18 +61,21 @@ const SignUpForm = ({ setUserData }) => {
                 message: 'Your username needs to be no more than 20 characters.',
               },
             })}
+            onFocus={() => setNameError('')}
           />
           {errors.username && <p>{errors.username.message}</p>}
         </label>
-        <label>
-          Email address
+        <label className={emailError ? classes.error : undefined}>
+          Email address {emailError ? `${emailError}` : ''}
           <input
             placeholder="Email address"
             type="email"
-            className={errors.email || error ? classes.red : undefined}
+            className={errors.email || emailError ? classes.red : undefined}
+            autoComplete="email-address"
             {...register('email', {
               required: 'Email is required',
             })}
+            onFocus={() => setEmailError('')}
           />
           {errors.email && <p>{errors.email.message}</p>}
         </label>
@@ -81,6 +85,7 @@ const SignUpForm = ({ setUserData }) => {
             placeholder="Password"
             type="password"
             className={errors.password && classes.red}
+            autoComplete="password"
             {...register('password', {
               required: 'Password is required',
               minLength: {
@@ -101,21 +106,12 @@ const SignUpForm = ({ setUserData }) => {
             placeholder="Password"
             type="password"
             className={errors.repeatPassword && classes.red}
+            autoComplete="repeat-password"
             {...register('repeatPassword', {
-              required: 'Password is required',
-              minLength: {
-                value: 6,
-                message: 'Your password needs to be at least 6 characters.',
-              },
-              maxLength: {
-                value: 40,
-                message: 'Your password needs to be no more than 40 characters.',
-              },
               validate: (value) => value === password,
             })}
           />
           {errors.repeatPassword?.type === 'validate' && <p>Passwords must match</p>}
-          {errors.repeatPassword && <p>{errors.repeatPassword.message}</p>}
         </label>
         <label className={classes.agreement}>
           <input

@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/forbid-prop-types */
-import React from 'react';
-import { Popconfirm, Spin } from 'antd';
-import { useParams } from 'react-router';
+import React, { useEffect, useState } from 'react';
+import { Redirect, useParams, useLocation, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { useLocation, useHistory } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+import { Popconfirm, Spin } from 'antd';
 import BlogapiService from '../services/blogapi-service';
 
 import ArticlePreview from '../article-preview';
@@ -12,14 +13,22 @@ import ArticlePreview from '../article-preview';
 import 'antd/dist/antd.css';
 import classes from './article-full.module.scss';
 
-const ArticleFull = ({ articles, user, signedIn }) => {
+// eslint-disable-next-line no-unused-vars
+const ArticleFull = ({ user, signedIn }) => {
   const { slug } = useParams();
-  const history = useHistory();
   const { pathname } = useLocation();
+  const [redirect, setRedirect] = useState(false);
+  const [article, setArticle] = useState({});
 
   const blogapiService = new BlogapiService();
 
-  if (articles.length === 0) {
+  useEffect(() => {
+    blogapiService.getArticle(slug).then((response) => {
+      setArticle(response.article);
+    });
+  }, []);
+
+  if (Object.keys(article).length === 0) {
     return (
       <div style={{ marginTop: 26 }}>
         <Spin size="large" />
@@ -27,12 +36,15 @@ const ArticleFull = ({ articles, user, signedIn }) => {
     );
   }
 
-  const [articleProps] = articles.filter((article) => article.slug === slug);
-  const { body, username } = articleProps;
+  const {
+    body,
+    author: { username },
+  } = article;
 
   return (
     <div className={classes.container}>
-      <ArticlePreview {...articleProps} />
+      {redirect ? <Redirect push to="/" /> : null}
+      <ArticlePreview {...article} />
       {signedIn && user.username === username ? (
         <div className={classes.buttons}>
           <Popconfirm
@@ -40,34 +52,34 @@ const ArticleFull = ({ articles, user, signedIn }) => {
             title="Are you sure to delete this article?"
             onConfirm={() => {
               blogapiService.deleteArticle(slug);
+              setRedirect(true);
             }}
             okText="Yes"
             cancelText="No"
           >
             <button className={classes.delete} type="button">
-              {' '}
-              Delete{' '}
+              Delete
             </button>
           </Popconfirm>
-          <button className={classes.edit} type="button" onClick={() => history.push(`${pathname}/edit`)}>
-            Edit
+          <button className={classes.edit} type="button">
+            <Link to={`${pathname}/edit`}> Edit </Link>
           </button>
         </div>
       ) : null}
 
-      <div className={classes.text}>{body} </div>
+      <div className={classes.text}>
+        <ReactMarkdown>{body}</ReactMarkdown>
+      </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  articles: state.articles,
   user: state.user,
   signedIn: state.authentication,
 });
 
 ArticleFull.propTypes = {
-  articles: PropTypes.arrayOf(PropTypes.object).isRequired,
   user: PropTypes.object.isRequired,
   signedIn: PropTypes.bool.isRequired,
 };

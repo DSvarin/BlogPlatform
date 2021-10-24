@@ -26,6 +26,10 @@
 
   .edit {
     @include bordered-button($green);
+
+    a {
+      color: inherit;
+    }
   }
 }
 

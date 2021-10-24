@@ -12,16 +12,12 @@ import BlogapiService from '../services/blogapi-service';
 import classes from './sign-in-form.module.scss';
 
 const SignInForm = ({ user, setUserData, setSignedIn }) => {
-  useEffect(() => {
-    setUserData({});
-  }, []);
-
   const [error, setError] = useState('');
-  const [emailValue, setEmailValue] = useState(user.email);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -31,33 +27,36 @@ const SignInForm = ({ user, setUserData, setSignedIn }) => {
   const onSubmit = (data) => {
     blogapiService.signIn(data).then((response) => {
       if (response.errors) {
-        setError(response.errors.body[1]);
-      }
-      if (response.user) {
+        setError(`Email or password ${response.errors['email or password']}`);
+      } else {
         setUserData(response.user);
         setSignedIn(true);
         myStorage.setItem('user', JSON.stringify(response.user));
       }
     });
   };
-  const errorText = error ? <div className={classes.error}>{error}</div> : null;
+
+  useEffect(() => {
+    setUserData({});
+    setValue('email', user.email);
+  }, []);
 
   return (
     <div className={classes.container}>
       <div className={classes.header}>Sign In</div>
-      {errorText}
+      {error ? <div className={classes.error}>{error}</div> : null}
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
           Email address
           <input
-            value={emailValue || ''}
             placeholder="Email address"
             type="email"
-            className={errors.email && classes.red}
+            className={errors.email || (error && classes.red)}
+            autoComplete="email-address"
             {...register('email', {
               required: 'Email is required',
             })}
-            onChange={(event) => setEmailValue(event.target.value)}
+            onFocus={() => setError('')}
           />
           {errors.email && <p>{errors.email.message}</p>}
         </label>
@@ -66,10 +65,12 @@ const SignInForm = ({ user, setUserData, setSignedIn }) => {
           <input
             placeholder="Password"
             type="password"
-            className={errors.password && classes.red}
+            className={errors.password || (error && classes.red)}
+            autoComplete="current-password"
             {...register('password', {
               required: 'Password is required',
             })}
+            onFocus={() => setError('')}
           />
           {errors.password && <p>{errors.password.message}</p>}
         </label>

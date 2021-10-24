@@ -1,6 +1,10 @@
 @import '../../styles/variables.scss';
 @import '../../styles/mixins.scss';
 
+.container {
+  position: relative;
+}
+
 .header {
   display: flex;
   flex-direction: row;
@@ -11,7 +15,7 @@
 .searchInfo {
   display: grid;
   grid-template-areas:
-    'title like counter'
+    'title like like'
     'tegs tegs tegs';
   align-items: center;
 
@@ -21,11 +25,17 @@
     margin-bottom: 5px;
     color: $blue;
   }
-
   .like {
-    grid-area: like;
+    margin-right: 10px;
     height: 15px;
-    margin-right: 5px;
+    @include fsize-small;
+    color: $text-color;
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 7px;
+    }
   }
 
   .tagsList {
