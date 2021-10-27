@@ -33,7 +33,7 @@ class BlogapiService {
         Authorization: `Token ${this.getToken()}`,
       },
     });
-    return res.articles;
+    return res;
   }
 
   async signUp(value) {

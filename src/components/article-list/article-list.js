@@ -15,10 +15,12 @@ import ArticlePreview from '../article-preview';
 const ArticleList = ({ articles, page, setPage, signedIn, setArticles }) => {
   const [loading, setLoading] = useState(true);
   const blogapiService = new BlogapiService();
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    blogapiService.getArticles((page - 1) * 20).then((data) => {
-      setArticles(data);
+    blogapiService.getArticles((page - 1) * 10).then((data) => {
+      setArticles(data.articles);
+      setTotal(data.articlesCount);
       setLoading(false);
     });
   }, [signedIn, page]);
@@ -44,7 +46,7 @@ const ArticleList = ({ articles, page, setPage, signedIn, setArticles }) => {
               );
             })}
           </ul>
-          <Pagination current={page} size="small" total={articles.length} onChange={(nextPage) => setPage(nextPage)} />
+          <Pagination current={page} size="small" total={total} onChange={(nextPage) => setPage(nextPage)} />
         </>
       ) : null}
     </>

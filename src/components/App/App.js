@@ -17,17 +17,16 @@ import SignUpForm from '../sign-up-form';
 import EditProfileForm from '../edit-profile-form';
 import ArticleForm from '../aticle-form';
 
-const App = ({ setSignedIn, setUserData, setArticles, user, authentication, page }) => {
-  const myStorage = window.localStorage;
+const App = ({ setSignedIn, setUserData, setArticles, authentication, page }) => {
   const blogapiService = new BlogapiService();
 
   useEffect(() => {
-    if (myStorage.getItem('user')) {
+    if (window.localStorage.getItem('user')) {
       setSignedIn(true);
-      setUserData(JSON.parse(myStorage.getItem('user')));
+      setUserData(JSON.parse(window.localStorage.getItem('user')));
     }
-    blogapiService.getArticles((page - 1) * 20).then((data) => {
-      setArticles(data);
+    blogapiService.getArticles((page - 1) * 10).then((data) => {
+      setArticles(data.articles);
     });
   }, []);
 
@@ -37,7 +36,7 @@ const App = ({ setSignedIn, setUserData, setArticles, user, authentication, page
       <Route exact path={['/', '/articles']} component={ArticleList} />
       <Route exact path="/articles/:slug" component={ArticleFull} />
       <Route path="/sign-in">{authentication ? <Redirect to="/" /> : <SignInForm />}</Route>
-      <Route path="/sign-up">{user.email ? <Redirect to="/sign-in" /> : <SignUpForm />}</Route>
+      <Route path="/sign-up">{authentication ? <Redirect to="/" /> : <SignUpForm />}</Route>
       <Route path="/profile" component={EditProfileForm} />
       <Route path="/articles/:slug/edit" component={ArticleForm} />
       <Route path="/new-article" component={ArticleForm} />
@@ -60,7 +59,6 @@ const mapDispatchToProps = (dispatch) => ({
 App.propTypes = {
   setSignedIn: PropTypes.func.isRequired,
   setUserData: PropTypes.func.isRequired,
-  user: PropTypes.objectOf(PropTypes.string).isRequired,
   authentication: PropTypes.bool.isRequired,
   setArticles: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,

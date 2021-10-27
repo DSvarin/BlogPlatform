@@ -40,10 +40,7 @@ const ArticleForm = ({ articles }) => {
       setValue('title', title);
       setValue('description', description);
       setValue('body', body);
-      setValue(
-        'tagList',
-        tags.map((tag) => ({ tag }))
-      );
+      setValue('tagList', [...tags.map((tag) => ({ tag })), { tag: '' }]);
     }
   }, [articles]);
 

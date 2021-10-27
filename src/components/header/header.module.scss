@@ -2,15 +2,21 @@
 @import '../../styles/variables.scss';
 
 .header {
-  height: 80px;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 22px;
   background: #ffffff;
-  color: $heading-color;
+  display: flex;
+  justify-content: center;
+
+  &>div {
+    width: 1600px;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 22px;
+    color: $heading-color;
+  }
 
   h6 {
     margin-bottom: 0;

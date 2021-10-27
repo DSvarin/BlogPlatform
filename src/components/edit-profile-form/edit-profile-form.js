@@ -15,10 +15,12 @@ import classes from './edit-profile-form.module.scss';
 
 const EditProfileForm = ({ user, setUserInfo }) => {
   const blogapiService = new BlogapiService();
-  const myStorage = window.localStorage;
+
+  const [redirect, setRedirect] = useState(false);
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   const { username, email, image } = user;
-  const [redirect, setRedirect] = useState(false);
   const {
     register,
     handleSubmit,
@@ -37,9 +39,18 @@ const EditProfileForm = ({ user, setUserInfo }) => {
     const { password, ...values } = data;
     const value = password ? data : { ...values };
     blogapiService.editProfile(value).then((response) => {
-      setUserInfo(response.user);
-      myStorage.setItem('user', JSON.stringify(response.user));
-      setRedirect(true);
+      if (!response.ok) {
+        if (response.match(/username/)) {
+          setNameError('should be unique');
+        }
+        if (response.match(/email/)) {
+          setEmailError('should be unique');
+        }
+      } else {
+        setUserInfo(response.user);
+        window.localStorage.setItem('user', JSON.stringify(response.user));
+        setRedirect(true);
+      }
     });
   };
 
@@ -56,11 +67,11 @@ const EditProfileForm = ({ user, setUserInfo }) => {
       {redirect ? <Redirect push to="/" /> : null}
       <div className={classes.header}>Edit Profile</div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>
-          Username
+        <label className={nameError ? classes.error : undefined}>
+          Username {nameError ? `${nameError}` : ''}
           <input
             type="text"
-            className={errors.username && classes.red}
+            className={errors.username || nameError ? classes.red : undefined}
             {...register('username', {
               required: 'Username is required',
               minLength: {
@@ -72,17 +83,19 @@ const EditProfileForm = ({ user, setUserInfo }) => {
                 message: 'Your username needs to be no more than 20 characters.',
               },
             })}
+            onFocus={() => setNameError('')}
           />
           {errors.username && <p>{errors.username.message}</p>}
         </label>
-        <label>
-          Email address
+        <label className={emailError ? classes.error : undefined}>
+          Email address {emailError ? `${emailError}` : ''}
           <input
             type="email"
-            className={errors.email && classes.red}
+            className={errors.email || emailError ? classes.red : undefined}
             {...register('email', {
               required: 'Email is required',
             })}
+            onFocus={() => setEmailError('')}
           />
           {errors.email && <p>{errors.email.message}</p>}
         </label>

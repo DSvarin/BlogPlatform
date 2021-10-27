@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import PropType from 'prop-types';
 import BlogapiService from '../services/blogapi-service';
 
-import { setUser } from '../../store/actions';
+import { setUser, setAuthentication } from '../../store/actions';
 
 import classes from './sign-up-form.module.scss';
 
-const SignUpForm = ({ setUserData }) => {
+const SignUpForm = ({ setUserData, setSignedIn }) => {
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
 
@@ -33,6 +33,8 @@ const SignUpForm = ({ setUserData }) => {
         setNameError(nameErr);
       } else {
         setUserData(response.user);
+        setSignedIn(true);
+        window.localStorage.setItem('user', JSON.stringify(response.user));
       }
     });
   };
@@ -134,10 +136,12 @@ const SignUpForm = ({ setUserData }) => {
 
 SignUpForm.propTypes = {
   setUserData: PropType.func.isRequired,
+  setSignedIn: PropType.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setUserData: (data) => dispatch(setUser(data)),
+  setSignedIn: (data) => dispatch(setAuthentication(data)),
 });
 
 export default connect(null, mapDispatchToProps)(SignUpForm);

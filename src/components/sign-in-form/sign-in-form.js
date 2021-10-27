@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -11,18 +11,16 @@ import BlogapiService from '../services/blogapi-service';
 
 import classes from './sign-in-form.module.scss';
 
-const SignInForm = ({ user, setUserData, setSignedIn }) => {
+const SignInForm = ({ setUserData, setSignedIn }) => {
   const [error, setError] = useState('');
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm();
 
   const blogapiService = new BlogapiService();
-  const myStorage = window.localStorage;
 
   const onSubmit = (data) => {
     blogapiService.signIn(data).then((response) => {
@@ -31,15 +29,10 @@ const SignInForm = ({ user, setUserData, setSignedIn }) => {
       } else {
         setUserData(response.user);
         setSignedIn(true);
-        myStorage.setItem('user', JSON.stringify(response.user));
+        window.localStorage.setItem('user', JSON.stringify(response.user));
       }
     });
   };
-
-  useEffect(() => {
-    setUserData({});
-    setValue('email', user.email);
-  }, []);
 
   return (
     <div className={classes.container}>
@@ -83,19 +76,14 @@ const SignInForm = ({ user, setUserData, setSignedIn }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-});
-
 const mapDispatchToProps = (dispatch) => ({
   setUserData: (data) => dispatch(setUser(data)),
   setSignedIn: (data) => dispatch(setAuthentication(data)),
 });
 
 SignInForm.propTypes = {
-  user: PropType.object.isRequired,
   setUserData: PropType.func.isRequired,
   setSignedIn: PropType.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInForm);
+export default connect(null, mapDispatchToProps)(SignInForm);
