@@ -2,6 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Pagination, Alert, Spin } from 'antd';
 
@@ -25,14 +26,28 @@ const ArticleList = ({ articles, page, setPage, signedIn, setArticles }) => {
     });
   }, [signedIn, page]);
 
+  const signIn = <Link to="/sign-in">Sign In</Link>;
+  const signUp = <Link to="/sign-up">Sign Up</Link>;
+
+  const homeAlert = (
+    <>
+      Please <Link to="/sign-in">sign in</Link> to your accaunt or <Link to="/sign-up">create new.</Link>
+    </>
+  );
+  const listAlert = (
+    <>
+      You don&apos;t have any published articles yet. Please <Link to="/new-article">create an article.</Link>
+    </>
+  );
+
   return (
     <>
       {loading ? <Spin size="large" style={{ marginTop: 26 }} /> : null}
       {articles.length === 0 && !signedIn && !loading ? (
-        <Alert style={{ marginTop: 26 }} message="Please sign in to your account" type="info" showIcon />
+        <Alert style={{ marginTop: 26, fontSize: 18 }} message={homeAlert} type="info" showIcon />
       ) : null}
       {articles.length === 0 && signedIn && !loading ? (
-        <Alert style={{ marginTop: 26 }} message="Please create an article" type="info" showIcon />
+        <Alert style={{ marginTop: 26, fontSize: 18 }} message={listAlert} type="info" showIcon />
       ) : null}
       {articles.length !== 0 && !loading ? (
         <>
