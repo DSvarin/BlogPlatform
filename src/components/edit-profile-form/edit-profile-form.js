@@ -39,17 +39,17 @@ const EditProfileForm = ({ user, setUserInfo }) => {
     const { password, ...values } = data;
     const value = password ? data : { ...values };
     blogapiService.editProfile(value).then((response) => {
-      if (!response.ok) {
+      if (response.user) {
+        setUserInfo(response.user);
+        window.localStorage.setItem('user', JSON.stringify(response.user));
+        setRedirect(true);
+      } else {
         if (response.match(/username/)) {
           setNameError('should be unique');
         }
         if (response.match(/email/)) {
           setEmailError('should be unique');
         }
-      } else {
-        setUserInfo(response.user);
-        window.localStorage.setItem('user', JSON.stringify(response.user));
-        setRedirect(true);
       }
     });
   };
